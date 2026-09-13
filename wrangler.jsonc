@@ -1,0 +1,19 @@
+{
+  // Static-only Worker: no server code, just the files in site/.
+  // `wrangler deploy` failed before this existed because it has no way to guess
+  // which directory to serve, and the repository root is the wrong answer — it
+  // holds the source workbooks and the guideline PDFs. See scripts/build_site.py.
+  // Must match the Worker created in the Cloudflare dashboard, or the build
+  // deploys to a different Worker than the one connected to this repository.
+  "name": "mim-dashboard",
+  "compatibility_date": "2026-09-09",
+  "assets": {
+    "directory": "./site",
+    // Serve /index.html at "/" and redirect /index -> / rather than 404.
+    "html_handling": "auto-trailing-slash",
+    // The dashboard routes on the hash, so a real path that does not exist is a
+    // genuine 404 and gets the custom page — not a silent fallback to the
+    // dashboard, which would return 200 for every typo.
+    "not_found_handling": "404-page"
+  }
+}
